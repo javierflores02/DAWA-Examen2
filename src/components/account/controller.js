@@ -76,7 +76,7 @@ export const getAccounts = async (req, res, next) => {
 export const depositMoney = async (req, res, next) => {
   try {
     let query = GetOneAccount({ AccountRepository })
-    const amount = parseInt(req.body.amount)
+    const amount = parseFloat(req.body.amount)
     const {account:accountG} = await query(req.params.id)
     const newBalance = accountG.balance + amount
     query = UpdateAccount({ AccountRepository })
@@ -94,7 +94,7 @@ export const depositMoney = async (req, res, next) => {
 export const withdrawalMoney = async (req, res, next) => {
   try {
     let query = GetOneAccount({ AccountRepository })
-    const amount = parseInt(req.body.amount)
+    const amount = parseFloat(req.body.amount)
     const {account:accountG} = await query(req.params.id)
     if(amount < accountG.balance){
       const newBalance = accountG.balance - amount
@@ -118,7 +118,7 @@ export const withdrawalMoney = async (req, res, next) => {
 export const transferMoney = async (req, res, next) => {
   try {
     let query = GetOneAccount({ AccountRepository })
-    const amount = parseInt(req.body.amount)
+    const amount = parseFloat(req.body.amount)
     const {account:fromAccount} = await query(req.params.idFromAccount)
     const {account:toAccount} = await query(req.body.idToAccount)
     if(amount < fromAccount.balance){
