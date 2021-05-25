@@ -107,3 +107,28 @@ export const withdrawalMoney = async (req, res, next) => {
     next(e)
   }
 }
+
+export const transferMoney = async (req, res, next) => {
+  try {
+    let query = GetOneAccount({ AccountRepository })
+    const amount = parseInt(req.body.amount)
+    const {account:fromAccount} = await query(req.params.idFromAccount)
+    const {account:toAccount} = await query(req.body.idToAccount)
+    if(amount < fromAccount.balance){
+      const newBalanceFrom = fromAccount.balance - amount
+      const newBalanceTo = toAccount.balance + amount
+      query = UpdateAccount({ AccountRepository })
+      await query(req.params.idFromAccount,{"balance":newBalanceFrom})
+      await query(req.body.idToAccount,{"balance":newBalanceTo})
+      res.status(201).json({
+        success: "The transfer was successful"
+      })
+    }else{
+      res.status(400).json({
+        error: "The originating account doesn't have enough balance for the transfer"
+      })
+    }
+  } catch (e) {
+    next(e)
+  }
+}
