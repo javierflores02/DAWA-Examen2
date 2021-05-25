@@ -69,3 +69,41 @@ export const getAccounts = async (req, res, next) => {
     next(e)
   }
 }
+
+export const depositMoney = async (req, res, next) => {
+  try {
+    const queryG = GetOneAccount({ AccountRepository })
+    const amount = parseInt(req.body.amount)
+    const {account:accountG} = await queryG(req.params.id)
+    const newBalance = accountG.balance + amount
+    const queryU = UpdateAccount({ AccountRepository })
+    const accountU = await queryU(req.params.id,{"balance":newBalance})
+    res.status(201).json({
+      data: accountU
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const withdrawalMoney = async (req, res, next) => {
+  try {
+    const queryG = GetOneAccount({ AccountRepository })
+    const amount = parseInt(req.body.amount)
+    const {account:accountG} = await queryG(req.params.id)
+    if(amount < accountG.balance){
+      const newBalance = accountG.balance - amount
+      const queryU = UpdateAccount({ AccountRepository })
+      const accountU = await queryU(req.params.id,{"balance":newBalance})
+      res.status(201).json({
+        data: accountU
+      })
+    }else{
+      res.status(400).json({
+        error: "You don't have enough balance for this withdrawal"
+      })
+    }
+  } catch (e) {
+    next(e)
+  }
+}
