@@ -39,7 +39,6 @@ export const getTransactions = async (req, res, next) => {
     const entity = await query(req.params.id)
     query = GetAccounts({ AccountRepository })
     const {accounts} = await query({ idOwner: entity.id })
-    const accountsX = []
     for (let index = 0; index < accounts.length; index++) {
       let account = accounts[index]
       query = GetTransactions({ TransactionRepository })

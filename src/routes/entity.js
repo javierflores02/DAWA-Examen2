@@ -1,5 +1,5 @@
 import express from 'express'
-import { createEntity, deleteEntity, getOneEntity, getEntities, updateEntity } from '../components/entity/controller'
+import { createEntity, deleteEntity, getOneEntity, getEntities, updateEntity, getAmounts } from '../components/entity/controller'
 import { getTransactions } from '../components/transaction/controller'
 
 const router = express.Router()
@@ -11,5 +11,7 @@ router.get('/:id', getOneEntity)
 router.get('/', getEntities)
 
 router.get('/:id/transactions', getTransactions)
+
+router.get('/:id/amounts', getAmounts)
 
 export default router

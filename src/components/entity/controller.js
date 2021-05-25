@@ -1,4 +1,6 @@
 import MongoEntityRepository from './infraestructure/MongoEntityRepository'
+import MongoAccountRepository from '../account/infraestructure/MongoAccountRepository'
+import GetAccounts from '../account/application/getAccounts'
 import CreateEntity from './application/createEntity'
 import DeleteEntity from './application/deleteEntity'
 import GetOneEntity from './application/getOneEntity'
@@ -6,6 +8,7 @@ import GetEntities from './application/getEntities'
 import UpdateEntity from './application/updateEntity'
 
 const EntityRepository = new MongoEntityRepository()
+const AccountRepository = new MongoAccountRepository()
 
 export const createEntity = async (req, res, next) => {
   try {
@@ -64,6 +67,21 @@ export const getEntities = async (req, res, next) => {
     const entities = await query()
     res.status(201).json({
       data: entities
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getAmounts = async (req, res, next) => {
+  try {
+    let query = GetOneEntity({ EntityRepository })
+    const entity = await query(req.params.id)
+    query = GetAccounts({ AccountRepository })
+    const {accounts} = await query({ idOwner: entity.id })
+    entity.accounts = accounts
+    res.status(201).json({
+      data: entity
     })
   } catch (e) {
     next(e)
