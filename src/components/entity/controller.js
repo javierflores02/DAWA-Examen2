@@ -87,3 +87,21 @@ export const getAmounts = async (req, res, next) => {
     next(e)
   }
 }
+
+export const getGlobalAmount = async (req, res, next) => {
+  try {
+    let query = GetOneEntity({ EntityRepository })
+    const {entity} = await query(req.params.id)
+    query = GetAccounts({ AccountRepository })
+    const {accounts} = await query({ idOwner: entity.id })
+    let globalAmount = 0
+    for (let index = 0; index < accounts.length; index++) {
+      globalAmount += parseFloat(accounts[index].balance)
+    }
+    res.status(201).json({
+      data: {...entity,globalAmount}
+    })
+  } catch (e) {
+    next(e)
+  }
+}
