@@ -1,11 +1,14 @@
 import MongoAccountRepository from './infraestructure/MongoAccountRepository'
+import MongoTransactionRepository from '../transaction/infraestructure/MongoTransactionRepository'
 import CreateAccount from './application/createAccount'
 import DeleteAccount from './application/deleteAccount'
 import GetOneAccount from './application/getOneAccount'
 import GetAccounts from './application/getAccounts'
 import UpdateAccount from './application/updateAccount'
+import createTransaction from '../transaction/application/createTransaction'
 
 const AccountRepository = new MongoAccountRepository()
+const TransactionRepository = new MongoTransactionRepository()
 
 export const createAccount = async (req, res, next) => {
   try {
@@ -72,12 +75,14 @@ export const getAccounts = async (req, res, next) => {
 
 export const depositMoney = async (req, res, next) => {
   try {
-    const queryG = GetOneAccount({ AccountRepository })
+    let query = GetOneAccount({ AccountRepository })
     const amount = parseInt(req.body.amount)
-    const {account:accountG} = await queryG(req.params.id)
+    const {account:accountG} = await query(req.params.id)
     const newBalance = accountG.balance + amount
-    const queryU = UpdateAccount({ AccountRepository })
-    const accountU = await queryU(req.params.id,{"balance":newBalance})
+    query = UpdateAccount({ AccountRepository })
+    const accountU = await query(req.params.id,{"balance":newBalance})
+    query = createTransaction({ TransactionRepository })
+    await query(amount,"deposit",req.params.id)
     res.status(201).json({
       data: accountU
     })
@@ -88,13 +93,15 @@ export const depositMoney = async (req, res, next) => {
 
 export const withdrawalMoney = async (req, res, next) => {
   try {
-    const queryG = GetOneAccount({ AccountRepository })
+    let query = GetOneAccount({ AccountRepository })
     const amount = parseInt(req.body.amount)
-    const {account:accountG} = await queryG(req.params.id)
+    const {account:accountG} = await query(req.params.id)
     if(amount < accountG.balance){
       const newBalance = accountG.balance - amount
-      const queryU = UpdateAccount({ AccountRepository })
-      const accountU = await queryU(req.params.id,{"balance":newBalance})
+      query = UpdateAccount({ AccountRepository })
+      const accountU = await query(req.params.id,{"balance":newBalance})
+      query = createTransaction({ TransactionRepository })
+      await query(amount,"withdrawal",req.params.id)
       res.status(201).json({
         data: accountU
       })

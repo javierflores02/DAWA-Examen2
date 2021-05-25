@@ -4,7 +4,7 @@
  */
 
 export default ({ AccountRepository }) => {
-    return async ( ) => {
-        return await AccountRepository.getAll()
+    return async ( query ) => {
+        return await AccountRepository.getAll(query)
     }
 }
