@@ -1,0 +1,24 @@
+{
+  "name": "examen2",
+  "version": "1.0.0",
+  "description": "Resolución de la parte práctica del examen 2 de Desarrollo de Aplicaciones Web Avanzadas",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon --es-module-specifier-resolution=node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Javier Fernando Flores Cárdenas",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "10.0.0",
+    "express": "4.17.1",
+    "helmet": "4.6.0",
+    "mongodb": "3.6.8",
+    "morgan": "1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
