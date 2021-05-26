@@ -21,8 +21,8 @@ class MongoAccountRepository {
     return { account }
   }
 
-  async getAll () {
-    const accounts = await this.mongoDB.getAll(this.collection)
+  async getAll (query) {
+    const accounts = await this.mongoDB.getAll(this.collection,query)
     return { accounts }
   }
 

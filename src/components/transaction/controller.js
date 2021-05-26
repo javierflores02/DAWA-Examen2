@@ -42,12 +42,32 @@ export const getTransactions = async (req, res, next) => {
     for (let index = 0; index < accounts.length; index++) {
       let account = accounts[index]
       query = GetTransactions({ TransactionRepository })
-      const {transactions} = await query({ idAccount: account.id })
+      const {transactions} = await query({ idAccount: `${account._id}` })
       account.transactions = transactions
     }
     entity.accounts = accounts
     res.status(201).json({
       data: entity
+    })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const getAllTransactions = async (req, res, next) => {
+  try {
+    
+    let query = GetAccounts({ AccountRepository })
+    const {accounts} = await query()
+    for (let index = 0; index < accounts.length; index++) {
+      let account = accounts[index]
+      query = GetTransactions({ TransactionRepository })
+      console.log(`ad: ${account._id}`)
+      const {transactions} = await query({ idAccount: `${account._id}` })
+      account.transactions = transactions
+    }
+    res.status(201).json({
+      data: accounts
     })
   } catch (e) {
     next(e)

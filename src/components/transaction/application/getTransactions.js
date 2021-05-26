@@ -4,7 +4,7 @@
  */
 
 export default ({ TransactionRepository }) => {
-    return async ( ) => {
-        return await TransactionRepository.getAll()
+    return async ( query ) => {
+        return await TransactionRepository.getAll( query )
     }
 }

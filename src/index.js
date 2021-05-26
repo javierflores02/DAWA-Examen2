@@ -18,16 +18,17 @@ app.use('/api/transaction/', apiTransaction)
 
 const typeDefs = gql`
   type Entity {
-    _id: String!
-    name: String!
+    _id: String
+    name: String
     number: String
     type: String
     ruc: String
   }
   type Account {
     _id: String!
-    idOwner: String!
+    entity: Entity
     balance: Float!
+    transactions: [Transaction]
   }
   type Transaction {
     _id: String!
@@ -47,6 +48,7 @@ const typeDefs = gql`
   }
   type Query {
     getAmountEntity(id: String!): Float
+    getAccounts: [Account]
   }
 `
 
@@ -54,7 +56,7 @@ const resolvers = {
   Query: {
     getAmountEntity: async(root, args) => {
       let cantidad = 0
-      await axios.get('http://localhost:3000/api/entity/60ad27ef4a2e890c48fc9359/globalAmount')
+      await axios.get(`http://localhost:3000/api/entity/${args.id}/globalAmount`)
       .then(function async(response) {
         const {data} = response.data
         cantidad = data.globalAmount
@@ -63,6 +65,43 @@ const resolvers = {
         cantidad = 0
       })
       return cantidad
+    },
+    getAccounts: async(root, args) => {
+      const accounts = []
+      const entities = []
+      await axios.get(`http://localhost:3000/api/entity/`)
+      .then(await function async(response) {
+        let data = response.data.data.entities
+        for (let index = 0; index < data.length; index++) {
+          let newEntity = data[index]
+          entities.push({
+            _id: newEntity._id,
+            name: newEntity.name,
+            number: newEntity.number,
+            type: newEntity.type,
+            ruc: newEntity.ruc
+          })
+        }
+      })
+      await axios.get(`http://localhost:3000/api/entity/allTransactions`)
+      .then(await function async(response) {
+        const {data} = response.data
+        for (let index = 0; index < data.length; index++) {
+          let account = data[index]
+          let newEntity = entities.find((entity)=>{return entity._id == account.idOwner})
+          let newAccount = {
+            "_id": account._id,
+            "entity": {...newEntity},
+            "balance": account.balance,
+            "transactions": account.transactions
+          }
+          accounts.push(newAccount)
+        }
+      })
+      .catch(function (error) {
+        cantidad = 0
+      })
+      return accounts
     }
   },
   Mutation: {

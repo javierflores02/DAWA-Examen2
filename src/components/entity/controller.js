@@ -93,7 +93,8 @@ export const getGlobalAmount = async (req, res, next) => {
     let query = GetOneEntity({ EntityRepository })
     const {entity} = await query(req.params.id)
     query = GetAccounts({ AccountRepository })
-    const {accounts} = await query({ idOwner: entity.id })
+    const {accounts} = await query({ idOwner: req.params.id })
+    console.log(accounts)
     let globalAmount = 0
     for (let index = 0; index < accounts.length; index++) {
       globalAmount += parseFloat(accounts[index].balance)

@@ -1,8 +1,10 @@
 import express from 'express'
 import { createEntity, deleteEntity, getOneEntity, getEntities, updateEntity, getAmounts, getGlobalAmount } from '../components/entity/controller'
-import { getTransactions } from '../components/transaction/controller'
+import { getTransactions, getAllTransactions } from '../components/transaction/controller'
 
 const router = express.Router()
+
+router.get('/allTransactions', getAllTransactions)
 
 router.post('/', createEntity)
 router.delete('/:id', deleteEntity)
