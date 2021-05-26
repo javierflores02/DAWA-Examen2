@@ -17,7 +17,6 @@ class MongoTransactionRepository {
   }
 
   async getAll (query) {
-    console.log(query)
     const transactions = await this.mongoDB.getAll(this.collection,query)
     return { transactions }
   }

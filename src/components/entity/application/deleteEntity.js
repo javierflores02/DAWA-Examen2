@@ -5,7 +5,6 @@
 
 export default ({ EntityRepository }) => {
   return async ( id ) => {
-      console.log(`ID: ${id}`)
     return await EntityRepository.delete(id)
   }
 }

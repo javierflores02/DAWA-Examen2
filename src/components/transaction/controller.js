@@ -62,7 +62,6 @@ export const getAllTransactions = async (req, res, next) => {
     for (let index = 0; index < accounts.length; index++) {
       let account = accounts[index]
       query = GetTransactions({ TransactionRepository })
-      console.log(`ad: ${account._id}`)
       const {transactions} = await query({ idAccount: `${account._id}` })
       account.transactions = transactions
     }

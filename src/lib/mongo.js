@@ -62,7 +62,6 @@ class MongoLib {
     const db = await this.connect()
     await db.collection(collection).deleteOne({ _id: ObjectId(id) })
     const registro = await db.collection(collection).findOne({ _id: ObjectId(id) })
-    console.log(registro)
     return id
   }
 }
