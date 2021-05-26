@@ -44,7 +44,7 @@ const typeDefs = gql`
       idFromAccount: String!
       amount: Float!
       idToAccount: String!
-    ): Transaction
+    ): String!
   }
   type Query {
     getAmountEntity(id: String!): Float
@@ -105,6 +105,20 @@ const resolvers = {
     }
   },
   Mutation: {
+    transferMoney: async(root, args) => {
+      let respuesta = ""
+      await axios.post(`http://localhost:3000/api/account/transfer/${args.idFromAccount}`, {
+        amount: args.amount,
+        idToAccount: args.idToAccount
+      })
+      .then(function (response) {
+        respuesta = "The transfer was successful"
+      })
+      .catch(function (error) {
+        respuesta = "The originating account doesn't have enough balance for the transfer"
+      });
+      return respuesta
+    }
   },
 }
 

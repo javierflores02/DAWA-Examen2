@@ -128,11 +128,11 @@ export const transferMoney = async (req, res, next) => {
       await query(req.params.idFromAccount,{"balance":newBalanceFrom})
       await query(req.body.idToAccount,{"balance":newBalanceTo})
       res.status(201).json({
-        success: "The transfer was successful"
+        response: "The transfer was successful"
       })
     }else{
       res.status(400).json({
-        error: "The originating account doesn't have enough balance for the transfer"
+        response: "The originating account doesn't have enough balance for the transfer"
       })
     }
   } catch (e) {
